@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saad Arif</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080a0e;
+  --s1:#0e1118;
+  --s2:#131720;
+  --bd:#1c2030;
+  --bd2:#252a38;
+  --mu:#3a4055;
+  --mu2:#6a7090;
+  --tx:#b8c0d0;
+  --wh:#e8edf5;
+  --ac:#a8c8e8;
+  --acd:#7aaace;
+}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg);
+  color:var(--tx);
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  display:flex;
+  flex-direction:column;
+}
+
+.shell{display:flex;height:100vh;width:100vw}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:216px;min-width:216px;
+  border-right:1px solid var(--bd);
+  display:flex;flex-direction:column;
+  background:var(--s1);
+}
+
+.id-block{
+  padding:30px 22px 24px;
+  border-bottom:1px solid var(--bd);
+}
+.id-tag{
+  font-size:9px;color:var(--mu2);
+  letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px;
+}
+.id-name{
+  font-size:24px;font-weight:700;
+  color:var(--wh);line-height:1.15;
+  letter-spacing:-.02em;margin-bottom:8px;
+  position:relative;display:inline-block;
+  cursor:default;
+}
+.id-name .last{color:var(--ac)}
+
+.id-name::before,.id-name::after{
+  content:attr(data-text);
+  position:absolute;inset:0;
+  font-size:24px;font-weight:700;
+  letter-spacing:-.02em;opacity:0;pointer-events:none;
+}
+.id-name::before{color:#c8e8ff;left:2px}
+.id-name::after{color:#4466aa;left:-2px}
+
+@keyframes g1{
+  0%,100%{clip-path:inset(100% 0 0 0);opacity:0}
+  15%{clip-path:inset(20% 0 60% 0);opacity:.7}
+  40%{clip-path:inset(55% 0 20% 0);opacity:.5}
+  65%{clip-path:inset(5% 0 75% 0);opacity:.8}
+}
+@keyframes g2{
+  0%,100%{clip-path:inset(100% 0 0 0);opacity:0}
+  25%{clip-path:inset(60% 0 15% 0);opacity:.6}
+  55%{clip-path:inset(10% 0 55% 0);opacity:.7}
+}
+.id-name.glitching::before{animation:g1 .35s steps(1) forwards}
+.id-name.glitching::after{animation:g2 .35s steps(1) forwards}
+
+.id-role{font-size:11px;color:var(--mu2);line-height:1.75}
+.id-role em{color:var(--ac);font-style:normal}
+
+.status-block{padding:14px 22px;border-bottom:1px solid var(--bd)}
+.status-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:4px 0;font-size:11px;
+}
+.s-label{color:var(--mu2)}
+.s-val{color:var(--tx)}
+.s-val.on{color:var(--ac);display:flex;align-items:center;gap:5px}
+.s-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--ac);
+  animation:dp 2.5s ease-in-out infinite;
+}
+@keyframes dp{0%,100%{opacity:1}50%{opacity:.2}}
+
+.xp-block{padding:14px 22px;border-bottom:1px solid var(--bd)}
+.xp-row{margin-bottom:12px}
+.xp-row:last-child{margin-bottom:0}
+.xp-top{display:flex;justify-content:space-between;font-size:9px;color:var(--mu2);margin-bottom:5px;letter-spacing:.04em}
+.xp-bar{height:1px;background:var(--bd2)}
+.xp-fill{height:100%;background:var(--acd);transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+
+.nav-menu{flex:1;padding:18px 0;overflow-y:auto}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 22px;cursor:pointer;
+  font-size:11px;color:var(--mu2);
+  letter-spacing:.06em;
+  border-left:1px solid transparent;
+  transition:all .15s;user-select:none;
+}
+.nav-item:hover{color:var(--tx);background:rgba(168,200,232,.03)}
+.nav-item.active{
+  color:var(--wh);
+  border-left-color:var(--acd);
+  background:rgba(168,200,232,.06);
+}
+.nav-idx{font-size:9px;color:var(--bd2);width:14px;transition:color .15s}
+.nav-item.active .nav-idx{color:var(--acd)}
+.nav-arr{margin-left:auto;font-size:9px;color:var(--acd);opacity:0;transition:opacity .15s}
+.nav-item.active .nav-arr{opacity:1}
+
+.sidebar-foot{
+  padding:14px 22px;border-top:1px solid var(--bd);
+  font-size:9px;color:var(--mu2);letter-spacing:.08em;
+}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+.topbar{
+  height:42px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;flex-shrink:0;background:var(--s1);
+}
+.tb-path{font-size:10px;color:var(--mu2);letter-spacing:.04em}
+.tb-path span{color:var(--ac)}
+.tb-time{font-size:10px;color:var(--mu2);letter-spacing:.04em}
+
+.content{flex:1;overflow-y:auto;padding:40px 44px}
+.content::-webkit-scrollbar{width:2px}
+.content::-webkit-scrollbar-thumb{background:var(--bd2)}
+
+.panel{display:none}
+.panel.active{display:block}
+.panel.animate{animation:panelIn .2s ease forwards}
+@keyframes panelIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.panel-title{
+  font-size:9px;color:var(--mu2);letter-spacing:.16em;
+  text-transform:uppercase;margin-bottom:32px;
+  display:flex;align-items:center;gap:12px;
+}
+.panel-title::before{content:'//';color:var(--acd);margin-right:2px}
+.panel-title::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+/* INTRO */
+.intro-headline{
+  font-size:clamp(22px,3vw,36px);
+  font-weight:700;color:var(--wh);
+  line-height:1.3;margin-bottom:24px;
+  letter-spacing:-.02em;
+}
+.intro-headline .hl{color:var(--ac)}
+.cursor-blink{
+  display:inline-block;width:10px;height:.85em;
+  background:var(--acd);vertical-align:text-bottom;
+  animation:cb 1s step-end infinite;margin-left:3px;
+}
+@keyframes cb{0%,100%{opacity:1}50%{opacity:0}}
+.intro-body{
+  font-size:13px;color:var(--tx);
+  line-height:2;max-width:500px;margin-bottom:32px;
+}
+.intro-socials{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 16px;border:1px solid var(--bd2);
+  color:var(--mu2);font-family:inherit;font-size:10px;
+  letter-spacing:.06em;text-decoration:none;
+  background:transparent;transition:all .18s;cursor:pointer;
+}
+.btn:hover{border-color:var(--acd);color:var(--ac);background:rgba(168,200,232,.05)}
+.btn svg{width:12px;height:12px;flex-shrink:0}
+
+/* SKILLS */
+.skills-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:10px;
+}
+.skill-card{
+  background:var(--s2);border:1px solid var(--bd);
+  padding:18px;transition:border-color .2s;
+}
+.skill-card:hover{border-color:var(--bd2)}
+.skill-cat{
+  font-size:9px;color:var(--acd);letter-spacing:.12em;
+  text-transform:uppercase;margin-bottom:12px;
+}
+.skill-list{list-style:none}
+.skill-list li{font-size:12px;color:var(--tx);padding:3px 0;line-height:1.6}
+.skill-list li::before{content:'— ';color:var(--mu2)}
+
+/* EXPERIENCE */
+.exp-card{
+  background:var(--s2);border:1px solid var(--bd);
+  padding:22px;margin-bottom:10px;transition:border-color .2s;
+}
+.exp-card:hover{border-color:var(--bd2)}
+.exp-head{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:4px;
+}
+.exp-role{font-size:14px;color:var(--wh);font-weight:500}
+.exp-date{font-size:10px;color:var(--mu2);letter-spacing:.05em;white-space:nowrap;margin-top:2px}
+.exp-org{font-size:10px;color:var(--acd);margin-bottom:12px;letter-spacing:.04em}
+.exp-desc{font-size:12px;color:var(--tx);line-height:1.9}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.tag{font-size:9px;color:var(--mu2);border:1px solid var(--bd);padding:3px 9px;letter-spacing:.05em}
+
+/* CERTS */
+.cert-card{
+  display:flex;align-items:center;gap:18px;
+  background:var(--s2);border:1px solid var(--bd);
+  padding:20px 22px;margin-bottom:10px;transition:border-color .2s;
+}
+.cert-card:hover{border-color:var(--bd2)}
+.cert-badge{
+  font-size:9px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:4px 10px;
+  border:1px solid;white-space:nowrap;flex-shrink:0;
+}
+.cert-badge.done{color:var(--ac);border-color:var(--acd)}
+.cert-badge.now{color:var(--mu2);border-color:var(--bd2)}
+.cert-name{font-size:13px;color:var(--wh);font-weight:500;margin-bottom:3px}
+.cert-sub{font-size:11px;color:var(--mu2)}
+
+/* CONTACT */
+.contact-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
+  gap:10px;
+}
+.contact-card{
+  display:flex;flex-direction:column;gap:5px;
+  background:var(--s2);border:1px solid var(--bd);
+  padding:20px;text-decoration:none;transition:border-color .2s;
+}
+.contact-card:hover{border-color:var(--acd)}
+.contact-card:hover .contact-val{color:var(--ac)}
+.contact-lbl{font-size:9px;color:var(--mu2);letter-spacing:.12em;text-transform:uppercase}
+.contact-val{font-size:12px;color:var(--tx);word-break:break-all;margin-top:5px}
+
+/* MOBILE */
+@media(max-width:640px){
+  .shell{flex-direction:column}
+  .sidebar{width:100%;min-width:0;border-right:none;border-bottom:1px solid var(--bd)}
+  .status-block,.xp-block{display:none}
+  .nav-menu{display:flex;flex-direction:row;padding:0;flex:unset;overflow-x:auto}
+  .nav-item{padding:11px 14px;border-left:none;border-bottom:1px solid transparent;white-space:nowrap}
+  .nav-item.active{border-bottom-color:var(--acd);border-left-color:transparent}
+  .nav-arr{display:none}
+  .sidebar-foot{display:none}
+  html,body{height:auto;overflow:auto}
+  .shell,.main{height:auto;overflow:visible}
+  .content{overflow:visible;padding:24px 20px}
+  .skills-grid{grid-template-columns:1fr 1fr}
+  .contact-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="id-block">
+      <p class="id-tag">// subject</p>
+      <div class="id-name" id="glitchName" data-text="Saad Arif">Saad <span class="last">Arif</span></div>
+      <p class="id-role" style="margin-top:10px">
+        IT Help Desk Intern<br>
+        <em>Aspiring Cybersecurity Professional</em>
+      </p>
+    </div>
+
+    <div class="status-block">
+      <div class="status-row">
+        <span class="s-label">location</span>
+        <span class="s-val">Karachi, PK</span>
+      </div>
+      <div class="status-row">
+        <span class="s-label">status</span>
+        <span class="s-val on"><span class="s-dot"></span>active</span>
+      </div>
+      <div class="status-row">
+        <span class="s-label">focus</span>
+        <span class="s-val">Cybersecurity</span>
+      </div>
+    </div>
+
+    <div class="xp-block">
+      <div class="xp-row">
+        <div class="xp-top"><span>Networking</span><span>CCNA active</span></div>
+        <div class="xp-bar"><div class="xp-fill" style="width:0" data-w="40"></div></div>
+      </div>
+      <div class="xp-row">
+        <div class="xp-top"><span>Hardware</span><span>certified</span></div>
+        <div class="xp-bar"><div class="xp-fill" style="width:0" data-w="60"></div></div>
+      </div>
+      <div class="xp-row">
+        <div class="xp-top"><span>Security</span><span>building</span></div>
+        <div class="xp-bar"><div class="xp-fill" style="width:0" data-w="25"></div></div>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <div class="nav-item active" data-panel="intro">
+        <span class="nav-idx">01</span><span>Intro</span><span class="nav-arr">▶</span>
+      </div>
+      <div class="nav-item" data-panel="skills">
+        <span class="nav-idx">02</span><span>Skills</span><span class="nav-arr">▶</span>
+      </div>
+      <div class="nav-item" data-panel="experience">
+        <span class="nav-idx">03</span><span>Experience</span><span class="nav-arr">▶</span>
+      </div>
+      <div class="nav-item" data-panel="certs">
+        <span class="nav-idx">04</span><span>Certs</span><span class="nav-arr">▶</span>
+      </div>
+      <div class="nav-item" data-panel="contact">
+        <span class="nav-idx">05</span><span>Contact</span><span class="nav-arr">▶</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">saad_arif · 2025</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <span class="tb-path">~/<span id="pathLabel">intro</span></span>
+      <span class="tb-time" id="clock"></span>
+    </div>
+
+    <div class="content">
+
+      <!-- INTRO -->
+      <div class="panel active animate" id="panel-intro">
+        <p class="panel-title">introduction</p>
+        <h2 class="intro-headline">
+          <span id="typedText"></span><span class="cursor-blink"></span>
+        </h2>
+        <div class="intro-body">
+          IT Help Desk Intern at Digital Roots, Karachi. Currently studying for my CCNA and working toward a career in cybersecurity.<br><br>I got into IT wanting to understand how systems actually work. Cybersecurity pulled me in from there and I have not looked back since. What genuinely interests me is understanding how attacks happen, how they unfold and how you defend against them. My goal is to learn this field properly across every domain. I focus on building real skills through certifications and hands-on work. Still early in the journey but I know where I'm going.
+        </div>
+        <div class="intro-socials">
+          <a href="https://www.linkedin.com/in/saad-arif-3754752a7" target="_blank" class="btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/Saad-Arif01" target="_blank" class="btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a>
+          <a href="mailto:saadarif049@gmail.com" class="btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email
+          </a>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="panel" id="panel-skills">
+        <p class="panel-title">skills &amp; tools</p>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <p class="skill-cat">Networking Concepts</p>
+            <ul class="skill-list">
+              <li>OSI / TCP-IP model</li>
+              <li>TCP &amp; UDP</li>
+              <li>DHCP / DNS</li>
+              <li>Subnetting basics</li>
+            </ul>
+          </div>
+          <div class="skill-card">
+            <p class="skill-cat">Network Analysis</p>
+            <ul class="skill-list">
+              <li>Wireshark</li>
+              <li>Packet capture</li>
+              <li>Protocol analysis</li>
+              <li>Traffic inspection</li>
+            </ul>
+          </div>
+          <div class="skill-card">
+            <p class="skill-cat">Cisco IOS CLI</p>
+            <ul class="skill-list">
+              <li>Router &amp; switch config</li>
+              <li>Hostname / passwords</li>
+              <li>Interface setup</li>
+              <li>Basic troubleshooting</li>
+            </ul>
+          </div>
+          <div class="skill-card">
+            <p class="skill-cat">Hardware</p>
+            <ul class="skill-list">
+              <li>PC &amp; laptop components</li>
+              <li>RAM / storage replacement</li>
+              <li>Component identification</li>
+              <li>Hardware diagnostics</li>
+            </ul>
+          </div>
+          <div class="skill-card">
+            <p class="skill-cat">IT Support</p>
+            <ul class="skill-list">
+              <li>Network troubleshooting</li>
+              <li>Hardware setup</li>
+              <li>Software installs &amp; OS</li>
+              <li>User support</li>
+            </ul>
+          </div>
+          <div class="skill-card">
+            <p class="skill-cat">Lab &amp; Simulation</p>
+            <ul class="skill-list">
+              <li>Cisco Packet Tracer</li>
+              <li>VirtualBox</li>
+              <li>VM setup &amp; config</li>
+              <li>Ubuntu (VM)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div class="panel" id="panel-experience">
+        <p class="panel-title">projects &amp; experience</p>
+
+        <div class="exp-card">
+          <div class="exp-head">
+            <span class="exp-role">IT Help Desk Intern</span>
+            <span class="exp-date">2025 — present</span>
+          </div>
+          <p class="exp-org">Digital Roots · Karachi</p>
+          <p class="exp-desc">Providing first-line IT support across network troubleshooting, hardware setup, software installs, and user assistance. Handling day-to-day technical issues across the organization.</p>
+          <div class="tags">
+            <span class="tag">Network Troubleshooting</span>
+            <span class="tag">Hardware</span>
+            <span class="tag">Software Support</span>
+            <span class="tag">User Support</span>
+          </div>
+        </div>
+
+        <div class="exp-card">
+          <div class="exp-head">
+            <span class="exp-role">SOCByte Phishing Hackathon</span>
+            <span class="exp-date">June 2025</span>
+          </div>
+          <p class="exp-org">NIC Karachi</p>
+          <p class="exp-desc">Designed a phishing simulation targeting CERT-Pakistan — built a credential harvesting scenario with a production-ready HTML email template. Covered phishing psychology, social engineering, and end-to-end attack flow.</p>
+          <div class="tags">
+            <span class="tag">Phishing</span>
+            <span class="tag">Social Engineering</span>
+            <span class="tag">HTML</span>
+            <span class="tag">Security Awareness</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CERTS -->
+      <div class="panel" id="panel-certs">
+        <p class="panel-title">certifications</p>
+
+        <div class="cert-card">
+          <span class="cert-badge done">Completed</span>
+          <div>
+            <p class="cert-name">Hardware Basics</p>
+            <p class="cert-sub">Cisco Networking Academy — PC &amp; laptop hardware fundamentals</p>
+          </div>
+        </div>
+
+        <div class="cert-card">
+          <span class="cert-badge now">In Progress</span>
+          <div>
+            <p class="cert-name">CCNA</p>
+            <p class="cert-sub">Cisco Certified Network Associate · Target: November 2026</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="panel" id="panel-contact">
+        <p class="panel-title">contact</p>
+        <div class="contact-grid">
+          <a href="https://www.linkedin.com/in/saad-arif-3754752a7" target="_blank" class="contact-card">
+            <span class="contact-lbl">LinkedIn</span>
+            <span class="contact-val">saad-arif-3754752a7</span>
+          </a>
+          <a href="https://github.com/Saad-Arif01" target="_blank" class="contact-card">
+            <span class="contact-lbl">GitHub</span>
+            <span class="contact-val">Saad-Arif01</span>
+          </a>
+          <a href="mailto:saadarif049@gmail.com" class="contact-card">
+            <span class="contact-lbl">Email</span>
+            <span class="contact-val">saadarif049@gmail.com</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// typing animation
+const lines=[
+  {text:"I'm Saad Arif."},
+  {text:"IT intern. Working toward cybersecurity.",hl:true}
+];
+const typedEl=document.getElementById('typedText');
+let li=0,ci=0;
+function type(){
+  const line=lines[li];
+  if(ci<=line.text.length){
+    const cur=line.text.slice(0,ci);
+    typedEl.innerHTML=li===0
+      ? cur
+      : lines[0].text+'<br><span class="hl">'+cur+'</span>';
+    ci++;
+    setTimeout(type,ci===1&&li===0?100:40);
+  } else if(li<lines.length-1){
+    li++;ci=0;setTimeout(type,350);
+  }
+}
+setTimeout(type,900);
+
+// keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  const map={'1':'intro','2':'skills','3':'experience','4':'certs','5':'contact'};
+  if(!map[e.key])return;
+  const target=map[e.key];
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelector('[data-panel="'+target+'"]').classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>{
+    p.classList.remove('active','animate');p.style.display='none';
+  });
+  const panel=document.getElementById('panel-'+target);
+  panel.style.display='block';
+  void panel.offsetWidth;
+  panel.classList.add('active','animate');
+  document.getElementById('pathLabel').textContent=target;
+});
+
+function tick(){
+  const now=new Date();
+  document.getElementById('clock').textContent=
+    now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' PKT';
+}
+tick();setInterval(tick,1000);
+
+setTimeout(()=>{
+  document.querySelectorAll('.xp-fill').forEach(el=>{
+    el.style.width=el.dataset.w+'%';
+  });
+},400);
+
+const nameEl=document.getElementById('glitchName');
+setTimeout(()=>{
+  nameEl.classList.add('glitching');
+  setTimeout(()=>nameEl.classList.remove('glitching'),400);
+},700);
+
+const navItems=document.querySelectorAll('.nav-item');
+const panels=document.querySelectorAll('.panel');
+const pathLabel=document.getElementById('pathLabel');
+
+navItems.forEach(item=>{
+  item.addEventListener('click',()=>{
+    const target=item.dataset.panel;
+    navItems.forEach(n=>n.classList.remove('active'));
+    item.classList.add('active');
+    panels.forEach(p=>{p.classList.remove('active','animate');p.style.display='none'});
+    const panel=document.getElementById('panel-'+target);
+    panel.style.display='block';
+    void panel.offsetWidth;
+    panel.classList.add('active','animate');
+    pathLabel.textContent=target;
+  });
+});
+</script>
+</body>
+</html>
